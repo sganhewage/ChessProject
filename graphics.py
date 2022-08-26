@@ -10,3 +10,4 @@ screen_height = 800
 
 #create the screen object; size determined by screen_width and screen_height
 screen = pygame.display.set_mode((screen_width, screen_height))
+print("hi")
