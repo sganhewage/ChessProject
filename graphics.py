@@ -1,5 +1,6 @@
-# import pygame
+# imports
 import pygame
+from PIL import Image
 
 # initialize pygame
 pygame.init()
@@ -12,6 +13,5 @@ screen_height = 800
 screen = pygame.display.set_mode((screen_width, screen_height))
 
 #the actual board
-from PIL import Image
-img = Image.open("board.jpg")
+img = Image.open("Chess Graphics/chess graphics/chess board/chessboard.jpg")
 img.show()
