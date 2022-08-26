@@ -14,7 +14,6 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 
 #the actual board
 img = Image.open("Chess Graphics/chess graphics/chess board/chessboard.jpg")
-img.show()
 
 #putting the image on the board
 screen = pygame.display.set_mode((screen_width, screen_height))
