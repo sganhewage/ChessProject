@@ -27,6 +27,7 @@ y = 10
 screen.blit(chessboard, (x, y))
 pygame.display.flip()  #shows the chessboard
 
+#all this code until quit i got from here https://levelup.gitconnected.com/chess-python-ca4532c7f5a4
 running = True
 while (running): #press end game then loop stops
     for event in pygame.event.get():
