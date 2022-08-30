@@ -12,6 +12,9 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 
 #board create
 #board = [['  ' for i in range(8)] for i in range(8)] #https://levelup.gitconnected.com/chess-python-ca4532c7f5a4
+white_piece_list = ["wR", "wKn", "wB", "wQ", "wK", "wP", "wP", "wP", "wP", "wP", "wP", "wP", "wP"]
+black_piece_list = ["bR", "bKn", "bB", "bQ", "bK", "bP", "bP", "bP", "bP", "bP", "bP", "bP", "bP"]
+
 scale = 94
 clock = pygame.time.Clock()
 
@@ -52,6 +55,75 @@ piece_dict = {"wP": wPImg,
              "bKn": bKnImg,
              "bB": bBImg}
 
+
+def getKnightMoves(pos, board):
+    """ A function(positionString, board) that returns the all possible moves
+        of a knight stood on a given position
+    """
+    column, row = list(pos.strip().lower())
+    row = int(row) - 1
+    column = chess_map_from_alpha_to_index[column]
+    #x,y = row, column
+    solutionMoves = []
+    try:
+        temp = board[x + 1][y - 2]
+        solutionMoves.append([x + 1, y - 2])
+    except:
+        pass
+    try:
+        temp = board[i + 2][j - 1]
+        solutionMoves.append([x + 2, y - 1])
+    except:
+        pass
+    try:
+        temp = board[x + 2][y + 1]
+        solutionMoves.append([x + 2, y + 1])
+    except:
+        pass
+    try:
+       temp = board[x + 1][y + 2]
+       solutionMoves.append([x + 1, y + 2])
+    except:
+        pass
+    try:
+        temp = board[x - 1][y + 2]
+        solutionMoves.append([x - 1, y + 2])
+    except:
+        pass
+    try:
+        temp = board[x - 2][y + 1]
+        solutionMoves.append([x - 2, y + 1])
+    except:
+        pass
+    try:
+        temp = board[x - 2][y - 1]
+        solutionMoves.append([x - 2, y - 1])
+    except:
+        pass
+    try:
+        temp = board[x - 1][y - 2]
+        solutionMoves.append([x - 1, y - 2])
+    except:
+        pass
+
+    # Filter all negative values
+    temp = [x for x in solutionMoves if x[0] >=0 and x[1] >=0]
+    allPossibleMoves = ["".join([chess_map_from_index_to_alpha[x[1]], str(x[0] + 1)]) for x in temp]
+    allPossibleMoves.sort()
+    return allPossibleMoves
+    print(allPossibleMoves)
+
+    #MOVEMENT ALGORITHMS
+#def movePiece(source_square_x, source_square_y, destination_square_x, destination_square_y):
+  #  if board[destination_square_x][destination_square_y] == None:
+     #   temp_source = 0
+     #   temp_dest = 0
+     #   board[source_square_x][destination_square_x] = temp_source
+    #    board[source_square_y][destination_square_y] = temp_dest
+   #     temp_source = board[source_square_x][destination_square_x]
+  #      temp_dest = board[source_square_y][destination_square_y]
+ #   elif board[destination_square_x][destination_square_y] != None && :
+#
 screen.fill((248, 240, 198))
 #the actual board #check if i got this from somewhere
 chessboard = pygame.image.load("Chess Graphics/chess graphics/chess board/chessboard.jpg").convert()
@@ -76,4 +148,4 @@ while (running): #press end game then loop stops
 pygame.quit()
 
 
-
+getKnightMoves()
