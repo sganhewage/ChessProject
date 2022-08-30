@@ -42,6 +42,29 @@ board = [["bR", "bKn", "bB", "bQ", "bK", "bB", "bKn", "bR"],
         ["wP", "wP", "wP", "wP", "wP", "wP", "wP", "wP"],
         ["wR", "wKn", "wB", "wQ", "wK", "wB", "wKn", "wR"]]
 
+#assigning each space one the board a value (ex A4)
+#https://impythonist.wordpress.com/2017/01/01/modeling-a-chessboard-and-mechanics-of-its-pieces-in-python/
+chess_map_from_alpha_to_index = {
+   "a" : 0,
+   "b" : 1,
+   "c" : 2,
+   "d" : 3,
+   "e" : 4,
+   "f" : 5,
+   "g" : 6,
+   "h" : 7}
+
+chess_map_from_index_to_alpha = {
+   0: "a",
+   1: "b",
+   2: "c",
+   3: "d",
+   4: "e",
+   5: "f",
+   6: "g",
+   7: "h"}
+
+
 piece_dict = {"wP": wPImg,
              "wK": wKImg,
              "wQ": wQImg,
@@ -97,7 +120,7 @@ def getKnightMoves(pos, board):
     except:
         pass
     try:
-        temp = board[i + 2][j - 1]
+        temp = board[x + 2][y - 1]
         solutionMoves.append([x + 2, y - 1])
     except:
         pass
