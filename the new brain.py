@@ -56,13 +56,39 @@ piece_dict = {"wP": wPImg,
              "bB": bBImg}
 
 
+
+
+
+#MOVEMENT ALGORITHMS
+#https://impythonist.wordpress.com/2017/01/01/modeling-a-chessboard-and-mechanics-of-its-pieces-in-python/
+chess_map_from_alpha_to_index = {
+   "a" : 0,
+   "b" : 1,
+   "c" : 2,
+   "d" : 3,
+   "e" : 4,
+   "f" : 5,
+   "g" : 6,
+   "h" : 7}
+
+chess_map_from_index_to_alpha = {
+   0: "a",
+   1: "b",
+   2: "c",
+   3: "d",
+   4: "e",
+   5: "f",
+   6: "g",
+   7: "h"}
+
+#https://impythonist.wordpress.com/2017/01/01/modeling-a-chessboard-and-mechanics-of-its-pieces-in-python/
 def getKnightMoves(pos, board):
     """ A function(positionString, board) that returns the all possible moves
         of a knight stood on a given position
     """
     column, row = list(pos.strip().lower())
     row = int(row) - 1
-    column = chess_map_from_alpha_to_index[column]
+    column = x #chess_map_from_alpha_to_index[column]
     #x,y = row, column
     solutionMoves = []
     try:
@@ -148,4 +174,4 @@ while (running): #press end game then loop stops
 pygame.quit()
 
 
-getKnightMoves()
+getKnightMoves(23, board)
