@@ -12,6 +12,9 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 
 #board create
 #board = [['  ' for i in range(8)] for i in range(8)] #https://levelup.gitconnected.com/chess-python-ca4532c7f5a4
+white_piece_list = ["wR", "wKn", "wB", "wQ", "wK", "wP", "wP", "wP", "wP", "wP", "wP", "wP", "wP"]
+black_piece_list = ["bR", "bKn", "bB", "bQ", "bK", "bP", "bP", "bP", "bP", "bP", "bP", "bP", "bP"]
+
 scale = 94
 clock = pygame.time.Clock()
 
@@ -27,8 +30,6 @@ bQImg = pygame.image.load('Chess Graphics/chess graphics/chess pieces/bQ.png')
 bRImg = pygame.image.load('Chess Graphics/chess graphics/chess pieces/bR.png')
 bKnImg = pygame.image.load('Chess Graphics/chess graphics/chess pieces/bKn.png')
 bBImg = pygame.image.load('Chess Graphics/chess graphics/chess pieces/bB.png')
-
-
 
 gameDisplay = pygame.display.set_mode((800, 800)) #source it https://pythonprogramming.net/displaying-images-pygame/
 
@@ -54,15 +55,18 @@ piece_dict = {"wP": wPImg,
              "bKn": bKnImg,
              "bB": bBImg}
 
-    #MOVEMENT ALGORITHMS
-def movePiece(source_square_x, source_square_y, destination_square_x, destination_square_y):
-    temp_source = 0
-    temp_dest = 0
-    board[source_square_x][destination_square_x] = temp_source
-    board[source_square_y][destination_square_y] = temp_dest
-    temp_source = board[source_square_x][destination_square_x]
-    temp_dest = board[source_square_y][destination_square_y]
 
+    #MOVEMENT ALGORITHMS
+#def movePiece(source_square_x, source_square_y, destination_square_x, destination_square_y):
+  #  if board[destination_square_x][destination_square_y] == None:
+     #   temp_source = 0
+     #   temp_dest = 0
+     #   board[source_square_x][destination_square_x] = temp_source
+    #    board[source_square_y][destination_square_y] = temp_dest
+   #     temp_source = board[source_square_x][destination_square_x]
+  #      temp_dest = board[source_square_y][destination_square_y]
+ #   elif board[destination_square_x][destination_square_y] != None && :
+#
 screen.fill((248, 240, 198))
 #the actual board #check if i got this from somewhere
 chessboard = pygame.image.load("Chess Graphics/chess graphics/chess board/chessboard.jpg").convert()
