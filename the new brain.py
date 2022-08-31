@@ -212,6 +212,8 @@ def getQueenMoves(pos, board):
 def getKingMoves(pos, board):
     for x in range(-1, 2):
 
+
+
 screen.fill((248, 240, 198))
 #the actual board #check if i got this from somewhere
 chessboard = pygame.image.load("Chess Graphics/chess graphics/chess board/chessboard.jpg").convert()
