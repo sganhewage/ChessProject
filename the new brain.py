@@ -42,6 +42,23 @@ board = [["bR", "bKn", "bB", "bQ", "bK", "bB", "bKn", "bR"],
         ["wP", "wP", "wP", "wP", "wP", "wP", "wP", "wP"],
         ["wR", "wKn", "wB", "wQ", "wK", "wB", "wKn", "wR"]]
 
+piece_dict = {"wP": wPImg,
+             "wK": wKImg,
+             "wQ": wQImg,
+             "wR": wRImg,
+             "wKn": wKnImg,
+             "wB": wBImg,
+             "bP": bPImg,
+             "bK": bKImg,
+             "bQ": bQImg,
+             "bR": bRImg,
+             "bKn": bKnImg,
+             "bB": bBImg}
+
+
+"""MOVEMENT ALGORITHMS"""
+
+#https://impythonist.wordpress.com/2017/01/01/modeling-a-chessboard-and-mechanics-of-its-pieces-in-python/
 #assigning each space one the board a value (ex A4)
 #https://impythonist.wordpress.com/2017/01/01/modeling-a-chessboard-and-mechanics-of-its-pieces-in-python/
 chess_map_from_alpha_to_index = {
@@ -64,115 +81,137 @@ chess_map_from_index_to_alpha = {
    6: "g",
    7: "h"}
 
-
-piece_dict = {"wP": wPImg,
-             "wK": wKImg,
-             "wQ": wQImg,
-             "wR": wRImg,
-             "wKn": wKnImg,
-             "wB": wBImg,
-             "bP": bPImg,
-             "bK": bKImg,
-             "bQ": bQImg,
-             "bR": bRImg,
-             "bKn": bKnImg,
-             "bB": bBImg}
-
-
-
-
-
-#MOVEMENT ALGORITHMS
-#https://impythonist.wordpress.com/2017/01/01/modeling-a-chessboard-and-mechanics-of-its-pieces-in-python/
-chess_map_from_alpha_to_index = {
-   "a" : 0,
-   "b" : 1,
-   "c" : 2,
-   "d" : 3,
-   "e" : 4,
-   "f" : 5,
-   "g" : 6,
-   "h" : 7}
-
-chess_map_from_index_to_alpha = {
-   0: "a",
-   1: "b",
-   2: "c",
-   3: "d",
-   4: "e",
-   5: "f",
-   6: "g",
-   7: "h"}
-
-#https://impythonist.wordpress.com/2017/01/01/modeling-a-chessboard-and-mechanics-of-its-pieces-in-python/
-def getKnightMoves(pos, board):
-    """ A function(positionString, board) that returns the all possible moves
-        of a knight stood on a given position
-    """
+"""THIS WEBSITE HELPED A LOT IN MOVEMENT ALGORITHMS (https://impythonist.wordpress.com/2017/01/01/modeling-a-chessboard-and-mechanics-of-its-pieces-in-python/)"""
+# Rook Moves
+def getRookMoves(pos, board):
+    # A function(positionString, board) that returns the all possible moves of a knight stood on a given position
     column, row = list(pos.strip().lower())
     row = int(row) - 1
-    column = x #chess_map_from_alpha_to_index[column]
-    #x,y = row, column
-    solutionMoves = []
+    column = chess_map_from_alpha_to_index[column]
+    x, y = row, column
+    possmoves = []
+
+# Compute the moves in Rank
+    for y in range(8):
+        if y != column:
+            possmoves.append((row, y))
+
+    # Compute the moves in File
+    for x in range(8):
+        if x != row:
+            possmoves.append((x, column))
+
+    possmoves = ["".join([chess_map_from_index_to_alpha[x[1]], str(x[0] + 1)]) for x in possmoves]
+    possmoves.sort()
+    return possmoves
+
+# Knight Moves
+def getKnightMoves(pos, board):
+    # A function(positionString, board) that returns the all possible moves of a knight stood on a given position
+    column, row = list(pos.strip().lower())
+    row = int(row) - 1
+    column = chess_map_from_alpha_to_index[column]
+    x, y = row, column
+    possmoves = []
     try:
         temp = board[x + 1][y - 2]
-        solutionMoves.append([x + 1, y - 2])
+        possmoves.append([x + 1, y - 2])
     except:
         pass
     try:
         temp = board[x + 2][y - 1]
-        solutionMoves.append([x + 2, y - 1])
+        possmoves.append([x + 2, y - 1])
     except:
         pass
     try:
         temp = board[x + 2][y + 1]
-        solutionMoves.append([x + 2, y + 1])
+        possmoves.append([x + 2, y + 1])
     except:
         pass
     try:
        temp = board[x + 1][y + 2]
-       solutionMoves.append([x + 1, y + 2])
+       possmoves.append([x + 1, y + 2])
     except:
         pass
     try:
         temp = board[x - 1][y + 2]
-        solutionMoves.append([x - 1, y + 2])
+        possmoves.append([x - 1, y + 2])
     except:
         pass
     try:
         temp = board[x - 2][y + 1]
-        solutionMoves.append([x - 2, y + 1])
+        possmoves.append([x - 2, y + 1])
     except:
         pass
     try:
         temp = board[x - 2][y - 1]
-        solutionMoves.append([x - 2, y - 1])
+        possmoves.append([x - 2, y - 1])
     except:
         pass
     try:
         temp = board[x - 1][y - 2]
-        solutionMoves.append([x - 1, y - 2])
+        possmoves.append([x - 1, y - 2])
     except:
         pass
 
     # Filter all negative values
-    temp = [x for x in solutionMoves if x[0] >=0 and x[1] >=0]
+    temp = [x for x in possmoves if x[0] >= 0 and x[1] >= 0]
     allPossibleMoves = ["".join([chess_map_from_index_to_alpha[x[1]], str(x[0] + 1)]) for x in temp]
     allPossibleMoves.sort()
     return allPossibleMoves
-    print(allPossibleMoves)
 
-    #MOVEMENT ALGORITHMS
-#def movePiece(source_square_x, source_square_y, destination_square_x, destination_square_y):
-  #  if board[destination_square_x][destination_square_y] == None:
-     #   temp_source = 0
-     #   temp_dest = 0
-     #   board[source_square_x][destination_square_x] = temp_source
-    #    board[source_square_y][destination_square_y] = temp_dest
-   #     temp_source = board[source_square_x][destination_square_x]
-  #      temp_dest = board[source_square_y][destination_square_y]
- #   elif board[destination_square_x][destination_square_y] != None && :
-#
+# Bishop Moves
+def getBishopMoves(pos, board):
+    # A function(positionString, board) that returns the all possible moves of a knight stood on a given position
+    column, row = list(pos.strip().lower())
+    row = int(row) - 1
+    column = chess_map_from_alpha_to_index[column]
+    x, y = row, column
+    possmoves = []
+
+# moving diagonal all 4 ways
+    for i in range(8):
+        try:
+            temp = board[x + i][y + i]
+            possmoves.append([x + i, y + i])
+        except:
+            pass
+
+        try:
+            temp = board[x - i][y + i]
+            possmoves.append([x - i, y + i])
+        except:
+            pass
+
+        try:
+            temp = board[x + i][y - i]
+            possmoves.append([x + i, y - i])
+        except:
+            pass
+
+        try:
+            temp = board[x - i][y - i]
+            possmoves.append([x - i, y - i])
+        except:
+            pass
+
+# Filter all negative values
+    temp = [x for x in possmoves if x[0] >= 0 and x[1] >= 0]
+    allPossibleMoves = ["".join([chess_map_from_index_to_alpha[x[1]], str(x[0] + 1)]) for x in temp]
+    allPossibleMoves.sort()
+    return allPossibleMoves
+
+"""QUEEN MOVES"""
+def getQueenMoves(pos, board):
+    bishop_subset = getBishopMoves(pos, board)
+    rook_subset = getRookMoves(pos, board)
+    Queen_Moves = bishop_subset + rook_subset
+    return Queen_Moves
+
+"""King Moves"""
+def getKingMoves(pos, board):
+    for x in range(-1, 2):
+
 screen.fill((248, 240, 198))
 #the actual board #check if i got this from somewhere
 chessboard = pygame.image.load("Chess Graphics/chess graphics/chess board/chessboard.jpg").convert()
@@ -196,5 +235,4 @@ while (running): #press end game then loop stops
     clock.tick(60)
 pygame.quit()
 
-
-getKnightMoves(23, board)
+print(getKingMoves("c1", board))
