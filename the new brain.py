@@ -1,5 +1,6 @@
 #Actual chess brain things
 import pygame
+from Chess import ChessEngine
 #from PIL import Image
 pygame.init()
 
@@ -106,6 +107,20 @@ chess_map_from_index_to_alpha = {
    5: "f",
    6: "g",
    7: "h"}
+
+b_capture_list = []
+w_capture_list = []
+
+def capture(captured_piece_x, captured_piece_y, board):
+    if str(board[captured_piece_x][captured_piece_y])[0] == "b":
+        b_capture_list.append(board[captured_piece_x][captured_piece_y])
+        board[captured_piece_x][captured_piece_y] = None
+    else:
+        w_capture_list.append(board[captured_piece_x][captured_piece_y])
+        board[captured_piece_x][captured_piece_y] = None
+
+
+
 
 """THIS WEBSITE HELPED A LOT IN MOVEMENT ALGORITHMS (https://impythonist.wordpress.com/2017/01/01/modeling-a-chessboard-and-mechanics-of-its-pieces-in-python/)"""
 # Rook Moves
@@ -294,6 +309,8 @@ for y in range(len(board)):
         if board[y][x] != None:
             screen.blit(piece_dict[board[y][x]], (x_offset + scale*x, y_offset + scale*y))
 
+print(str(board[0][0])[0])
+
 #all this code until quit i got from here https://levelup.gitconnected.com/chess-python-ca4532c7f5a4 and https://www.youtube.com/watch?v=o24J3WcBGLg
 running = True
 selectedsquare = ()
@@ -312,7 +329,7 @@ while (running): #press end game then loop stops
             else:
                 selectedsquare = (row, col)
                 playerinputclicks.append(selectedsquare)
-                move = chess.Move(playerinputclicks[0], playerinputclicks[1], board)
+                move = ChessEngine.Move(playerinputclicks[0], playerinputclicks[1], board)
                 board.makeMove(move)
                 selectedsquare = ()
                 playerinputclicks = []
@@ -322,3 +339,6 @@ while (running): #press end game then loop stops
     pygame.display.update()
     clock.tick(60)
 pygame.quit()
+
+
+print(getKnightMoves("e5", board))
