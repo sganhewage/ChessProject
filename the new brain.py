@@ -58,6 +58,35 @@ piece_dict = {"wP": wPImg,
 
 """MOVEMENT ALGORITHMS"""
 
+# Creating Teams for Black and White (https://www.w3schools.com/python/python_classes.asp)
+class Pawn:
+    def __init__(self, color):
+        self.color = color
+wP = Pawn("White")
+bP = Pawn("Black")
+
+class King:
+    def __init__(self, color):
+        self.color = color
+wK = King("White")
+bK = King("Black")
+class Queen:
+    def __init__(self, color):
+        self.color = color
+wQ = Queen("White")
+bQ = Queen("Black")
+class Bishop:
+    def __init__(self, color):
+        self.color = color
+class Knight:
+    def __init__(self, color):
+        self.color = color
+class Rook:
+    def __init__(self, color):
+        self.color = color
+
+
+
 #https://impythonist.wordpress.com/2017/01/01/modeling-a-chessboard-and-mechanics-of-its-pieces-in-python/
 #assigning each space one the board a value (ex A4)
 #https://impythonist.wordpress.com/2017/01/01/modeling-a-chessboard-and-mechanics-of-its-pieces-in-python/
@@ -210,8 +239,47 @@ def getQueenMoves(pos, board):
 
 """King Moves"""
 def getKingMoves(pos, board):
-    for x in range(-1, 2):
+# A function(positionString, board) that returns the all possible moves of a knight stood on a given position
+    column, row = list(pos.strip().lower())
+    row = int(row) - 1
+    column = chess_map_from_alpha_to_index[column]
+    x, y = row, column
+    possmoves = []
+    for i in range(-1, 2):
+        for j in range (-1, 2):
+            if (i != 0) or (j != 0):
+                try:
+                    temp = board[x + i][y + j]
+                    possmoves.append([x + i, y + j])
+                except:
+                    pass
+    # Filter all negative values
+    temp = [x for x in possmoves if x[0] >= 0 and x[1] >= 0]
+    allPossibleMoves = ["".join([chess_map_from_index_to_alpha[x[1]], str(x[0] + 1)]) for x in temp]
+    allPossibleMoves.sort()
+    return allPossibleMoves
 
+"""PAWN MOVES"""
+def getPawnMoves(pos, board):
+# A function(positionString, board) that returns the all possible moves of a knight stood on a given position
+    column, row = list(pos.strip().lower())
+    row = int(row) - 1
+    column = chess_map_from_alpha_to_index[column]
+    x, y = row, column
+    possmoves = []
+    for i in range(-1, 2):
+        for j in range (-1, 2):
+            if (i != 0) or (j != 0):
+                try:
+                    temp = board[x + i][y + j]
+                    possmoves.append([x + i, y + j])
+                except:
+                    pass
+    # Filter all negative values
+    temp = [x for x in possmoves if x[0] >= 0 and x[1] >= 0]
+    allPossibleMoves = ["".join([chess_map_from_index_to_alpha[x[1]], str(x[0] + 1)]) for x in temp]
+    allPossibleMoves.sort()
+    return allPossibleMoves
 
 
 screen.fill((248, 240, 198))
@@ -237,4 +305,4 @@ while (running): #press end game then loop stops
     clock.tick(60)
 pygame.quit()
 
-print(getKingMoves("c1", board))
+print(getKingMoves("e5", board))
