@@ -58,32 +58,26 @@ piece_dict = {"wP": wPImg,
 
 """MOVEMENT ALGORITHMS"""
 
-# Creating Teams for Black and White (https://www.w3schools.com/python/python_classes.asp)
-class Pawn:
-    def __init__(self, color):
-        self.color = color
-wP = Pawn("White")
-bP = Pawn("Black")
+# Creating Teams for Black and White (https://levelup.gitconnected.com/chess-python-ca4532c7f5a4)
+class Piece:
+    def __init__(self, team, type, image, killable=False):
+        self.team = team
+        self.type = type
+        self.killable = killable
+        self.image = image
 
-class King:
-    def __init__(self, color):
-        self.color = color
-wK = King("White")
-bK = King("Black")
-class Queen:
-    def __init__(self, color):
-        self.color = color
-wQ = Queen("White")
-bQ = Queen("Black")
-class Bishop:
-    def __init__(self, color):
-        self.color = color
-class Knight:
-    def __init__(self, color):
-        self.color = color
-class Rook:
-    def __init__(self, color):
-        self.color = color
+bp = Piece('b', 'p', 'b_pawn.png')
+wp = Piece('w', 'p', 'w_pawn.png')
+bk = Piece('b', 'k', 'b_king.png')
+wk = Piece('w', 'k', 'w_king.png')
+br = Piece('b', 'r', 'b_rook.png')
+wr = Piece('w', 'r', 'w_rook.png')
+bb = Piece('b', 'b', 'b_bishop.png')
+wb = Piece('w', 'b', 'w_bishop.png')
+bq = Piece('b', 'q', 'b_queen.png')
+wq = Piece('w', 'q', 'w_queen.png')
+bkn = Piece('b', 'kn', 'b_knight.png')
+wkn = Piece('w', 'kn', 'w_knight.png')
 
 
 
