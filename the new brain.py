@@ -66,18 +66,18 @@ class Piece:
         self.killable = killable
         self.image = image
 
-bp = Piece('b', 'p', 'b_pawn.png')
-wp = Piece('w', 'p', 'w_pawn.png')
-bk = Piece('b', 'k', 'b_king.png')
-wk = Piece('w', 'k', 'w_king.png')
-br = Piece('b', 'r', 'b_rook.png')
-wr = Piece('w', 'r', 'w_rook.png')
-bb = Piece('b', 'b', 'b_bishop.png')
-wb = Piece('w', 'b', 'w_bishop.png')
-bq = Piece('b', 'q', 'b_queen.png')
-wq = Piece('w', 'q', 'w_queen.png')
-bkn = Piece('b', 'kn', 'b_knight.png')
-wkn = Piece('w', 'kn', 'w_knight.png')
+bP = Piece('b', 'P', 'Chess Graphics/chess graphics/chess pieces/bP.png')
+wP = Piece('w', 'P', 'Chess Graphics/chess graphics/chess pieces/wP.png')
+bK = Piece('b', 'K', 'Chess Graphics/chess graphics/chess pieces/bK.png')
+wK = Piece('w', 'K', 'Chess Graphics/chess graphics/chess pieces/wK.png')
+bR = Piece('b', 'R', 'Chess Graphics/chess graphics/chess pieces/bR.png')
+wR = Piece('w', 'R', 'Chess Graphics/chess graphics/chess pieces/wR.png')
+bB = Piece('b', 'B', 'Chess Graphics/chess graphics/chess pieces/bB.png')
+wB = Piece('w', 'B', 'Chess Graphics/chess graphics/chess pieces/wB.png')
+bQ = Piece('b', 'Q', 'Chess Graphics/chess graphics/chess pieces/bQ.png')
+wQ= Piece('w', 'Q', 'Chess Graphics/chess graphics/chess pieces/wQ.png')
+bKn = Piece('b', 'Kn', 'Chess Graphics/chess graphics/chess pieces/bKn.png')
+wKn = Piece('w', 'Kn', 'Chess Graphics/chess graphics/chess pieces/wKn.png')
 
 
 
