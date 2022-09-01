@@ -1,4 +1,5 @@
 #Actual chess brain things
+import chess
 import pygame
 from PIL import Image
 pygame.init()
@@ -56,16 +57,19 @@ piece_dict = {"wP": wPImg,
              "bB": bBImg}
 
 
+"""User Input and Graphics"""
+
 """MOVEMENT ALGORITHMS"""
 
-# Creating Teams for Black and White (https://levelup.gitconnected.com/chess-python-ca4532c7f5a4)
+"""# Creating Teams for Black and White (https://levelup.gitconnected.com/chess-python-ca4532c7f5a4)
 class Piece:
     def __init__(self, team, type, image, killable=False):
         self.team = team
         self.type = type
         self.killable = killable
         self.image = image
-
+"""
+"""
 bP = Piece('b', 'P', 'Chess Graphics/chess graphics/chess pieces/bP.png')
 wP = Piece('w', 'P', 'Chess Graphics/chess graphics/chess pieces/wP.png')
 bK = Piece('b', 'K', 'Chess Graphics/chess graphics/chess pieces/bK.png')
@@ -78,7 +82,7 @@ bQ = Piece('b', 'Q', 'Chess Graphics/chess graphics/chess pieces/bQ.png')
 wQ= Piece('w', 'Q', 'Chess Graphics/chess graphics/chess pieces/wQ.png')
 bKn = Piece('b', 'Kn', 'Chess Graphics/chess graphics/chess pieces/bKn.png')
 wKn = Piece('w', 'Kn', 'Chess Graphics/chess graphics/chess pieces/wKn.png')
-
+"""
 
 
 #https://impythonist.wordpress.com/2017/01/01/modeling-a-chessboard-and-mechanics-of-its-pieces-in-python/
@@ -253,7 +257,9 @@ def getKingMoves(pos, board):
     allPossibleMoves.sort()
     return allPossibleMoves
 
-"""PAWN MOVES"""
+"""PAWN MOVES""" """(https://www.youtube.com/watch?v=F-ZPioOvOaM)"""
+
+
 def getPawnMoves(pos, board):
 # A function(positionString, board) that returns the all possible moves of a knight stood on a given position
     column, row = list(pos.strip().lower())
@@ -289,14 +295,31 @@ for y in range(len(board)):
         if board[y][x] != None:
             screen.blit(piece_dict[board[y][x]], (x_offset + scale*x, y_offset + scale*y))
 
-#all this code until quit i got from here https://levelup.gitconnected.com/chess-python-ca4532c7f5a4
+#all this code until quit i got from here https://levelup.gitconnected.com/chess-python-ca4532c7f5a4 and https://www.youtube.com/watch?v=o24J3WcBGLg
 running = True
+selectedsquare = ()
+playerinputclicks = []
 while (running): #press end game then loop stops
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            location = pygame.mouse.get_pos()
+            col = location[0] // 100 #sqsize = height // dimesion (8)
+            row = location[1] // 100
+            if selectedsquare == (row, col):
+                selectedsquare = ()
+                playerinputclicks = []
+            else:
+                selectedsquare = (row, col)
+                playerinputclicks.append(selectedsquare)
+                move = chess.Move(playerinputclicks[0], playerinputclicks[1], board)
+                board.makeMove(move)
+                selectedsquare = ()
+                playerinputclicks = []
+            #if len(playerinputclicks) == 2: #storing the moves
+
+
     pygame.display.update()
     clock.tick(60)
 pygame.quit()
-
-print(getKingMoves("e5", board))
