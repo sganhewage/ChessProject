@@ -1,7 +1,6 @@
 #Actual chess brain things
-import chess
 import pygame
-from PIL import Image
+#from PIL import Image
 pygame.init()
 
 # define constants for the screen width and height
