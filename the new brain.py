@@ -1,6 +1,6 @@
 #Actual chess brain things
 import pygame
-from Chess import ChessEngine
+import chess
 #from PIL import Image
 pygame.init()
 
@@ -326,13 +326,15 @@ while (running): #press end game then loop stops
             if selectedsquare == (row, col):
                 selectedsquare = ()
                 playerinputclicks = []
-            else:
-                selectedsquare = (row, col)
-                playerinputclicks.append(selectedsquare)
-                move = ChessEngine.Move(playerinputclicks[0], playerinputclicks[1], board)
+            elif len(playerinputclicks) >= 2:
+                move = chess.Move(playerinputclicks[0], playerinputclicks[1], board)
                 board.makeMove(move)
                 selectedsquare = ()
                 playerinputclicks = []
+            else:
+                selectedsquare = (row, col)
+                playerinputclicks.append(selectedsquare)
+
             #if len(playerinputclicks) == 2: #storing the moves
 
 
