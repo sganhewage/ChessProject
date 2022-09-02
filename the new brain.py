@@ -304,12 +304,27 @@ screen.blit(chessboard, (10, 10))
 x_offset = 27
 y_offset = 27
 
-for y in range(len(board)):
-    for x in range(len(board[0])):
-        if board[y][x] != None:
-            screen.blit(piece_dict[board[y][x]], (x_offset + scale*x, y_offset + scale*y))
+def draw_board(board):
+    screen.blit(chessboard, (10, 10))
+    for y in range(len(board)):
+        for x in range(len(board[0])):
+            if board[y][x] != None:
+                screen.blit(piece_dict[board[y][x]], (x_offset + scale*x, y_offset + scale*y))
 
 print(str(board[0][0])[0])
+
+def makeMove(board, playerinputclicks):
+    piece_y = playerinputclicks[0][0]
+    piece_x = playerinputclicks[0][1]
+
+    dest_y = playerinputclicks[1][0]
+    dest_x = playerinputclicks[1][1]
+
+    if board[piece_y][piece_x] != None:
+        board[dest_y][dest_x] = board[piece_y][piece_x]
+        board[piece_y][piece_x] = None
+
+    return board
 
 #all this code until quit i got from here https://levelup.gitconnected.com/chess-python-ca4532c7f5a4 and https://www.youtube.com/watch?v=o24J3WcBGLg
 running = True
@@ -323,21 +338,20 @@ while (running): #press end game then loop stops
             location = pygame.mouse.get_pos()
             col = location[0] // 100 #sqsize = height // dimesion (8)
             row = location[1] // 100
+            
+            selectedsquare = (row, col)
+            playerinputclicks.append(selectedsquare)
             if selectedsquare == (row, col):
                 selectedsquare = ()
-                playerinputclicks = []
-            elif len(playerinputclicks) >= 2:
-                move = chess.Move(playerinputclicks[0], playerinputclicks[1], board)
-                board.makeMove(move)
-                selectedsquare = ()
-                playerinputclicks = []
-            else:
-                selectedsquare = (row, col)
-                playerinputclicks.append(selectedsquare)
+                #playerinputclicks = []
+                if len(playerinputclicks) >= 2:
+                    board = makeMove(board, playerinputclicks)
+                    selectedsquare = ()
+                    playerinputclicks = []
 
             #if len(playerinputclicks) == 2: #storing the moves
 
-
+    draw_board(board)
     pygame.display.update()
     clock.tick(60)
 pygame.quit()
