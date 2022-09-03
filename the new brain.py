@@ -135,7 +135,7 @@ def capture(captured_piece_x, captured_piece_y, board):
 """THIS WEBSITE HELPED A LOT IN MOVEMENT ALGORITHMS (https://impythonist.wordpress.com/2017/01/01/modeling-a-chessboard-and-mechanics-of-its-pieces-in-python/)"""
 # Rook Moves
 def getRookMoves(pos, board):
-    # A function(positionString, board) that returns the all possible moves of a knight stood on a given position
+    # A function(positionString, board) that returns the all possible moves of a rook stood on a given position
     column, row = list(pos.strip().lower())
     row = int(row) - 1
     column = chess_map_from_alpha_to_index[column]
@@ -213,7 +213,7 @@ def getKnightMoves(pos, board):
 
 # Bishop Moves
 def getBishopMoves(pos, board):
-    # A function(positionString, board) that returns the all possible moves of a knight stood on a given position
+    # A function(positionString, board) that returns the all possible moves of a bishop stood on a given position
     column, row = list(pos.strip().lower())
     row = int(row) - 1
     column = chess_map_from_alpha_to_index[column]
@@ -261,7 +261,7 @@ def getQueenMoves(pos, board):
 
 """King Moves"""
 def getKingMoves(pos, board):
-# A function(positionString, board) that returns the all possible moves of a knight stood on a given position
+# A function(positionString, board) that returns the all possible moves of a king stood on a given position
     column, row = list(pos.strip().lower())
     row = int(row) - 1
     column = chess_map_from_alpha_to_index[column]
@@ -285,7 +285,7 @@ def getKingMoves(pos, board):
 
 
 def getPawnMoves(pos, board):
-# A function(positionString, board) that returns the all possible moves of a knight stood on a given position
+# A function(positionString, board) that returns the all possible moves of a pawn stood on a given position
     column, row = list(pos.strip().lower())
     row = int(row) - 1
     column = chess_map_from_alpha_to_index[column]
@@ -337,10 +337,36 @@ def makeMove(board, playerinputclicks):
         board_dest_y = chess_map_from_true_y_to_board_y[dest_y]
         alpha_dest_x = chess_map_from_index_to_alpha[dest_x]
 
+        pos_moves = []
+
         print(alpha_piece_x+board_piece_y)
 
         if str(board[piece_y][piece_x])[1] == "P":
-            pos_moves = getPawnMoves(alpha_piece_x+board_piece_y, board)
+            if str(board[piece_y][piece_x])[0] == "w":
+                #SETUP FOR PROMOTION IMPLEMENTATION
+                if piece_y != 0:
+                    pos_moves.append(alpha_piece_x+str((int(board_piece_y)+1)))
+                    if piece_x != 7:
+                        if str(board[piece_y-1][piece_x+1])[0] == "b":
+                            pos_moves.append(chess_map_from_index_to_alpha[piece_x+1]+chess_map_from_true_y_to_board_y[piece_y-1])
+                    if piece_x != 0:
+                        if str(board[piece_y-1][piece_x-1])[0] == "b":
+                            pos_moves.append(chess_map_from_index_to_alpha[piece_x-1]+chess_map_from_true_y_to_board_y[piece_y-1])
+                    if piece_y == 6:
+                        pos_moves.append(alpha_piece_x+"4")
+            if str(board[piece_y][piece_x])[0] == "b":
+                #SETUP FOR PROMOTION IMPLEMENTATION
+                if piece_y != 7:
+                    pos_moves.append(alpha_piece_x+str((int(board_piece_y)-1)))
+                    if piece_x != 7:
+                        if str(board[piece_y+1][piece_x+1])[0] == "w":
+                            pos_moves.append(chess_map_from_index_to_alpha[piece_x+1]+chess_map_from_true_y_to_board_y[piece_y+1])
+                    if piece_x != 7:
+                        if str(board[piece_y+1][piece_x-1])[0] == "w":
+                            pos_moves.append(chess_map_from_index_to_alpha[piece_x-1]+chess_map_from_true_y_to_board_y[piece_y+1])
+                    if piece_y == 1:
+                        pos_moves.append(alpha_piece_x+"5")
+            #pos_moves = getPawnMoves(alpha_piece_x+board_piece_y, board)
 
         if str(board[piece_y][piece_x])[1] == "R":
             pos_moves = getRookMoves(alpha_piece_x+board_piece_y, board)
