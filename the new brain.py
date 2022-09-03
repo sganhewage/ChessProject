@@ -108,6 +108,16 @@ chess_map_from_index_to_alpha = {
    6: "g",
    7: "h"}
 
+chess_map_from_true_y_to_board_y = {
+   0: "8",
+   1: "7",
+   2: "6",
+   3: "5",
+   4: "4",
+   5: "3",
+   6: "2",
+   7: "1"}
+
 b_capture_list = []
 w_capture_list = []
 
@@ -317,13 +327,49 @@ def makeMove(board, playerinputclicks):
     piece_y = playerinputclicks[0][0]
     piece_x = playerinputclicks[0][1]
 
-    dest_y = playerinputclicks[1][0]
-    dest_x = playerinputclicks[1][1]
-
     if board[piece_y][piece_x] != None:
-        board[dest_y][dest_x] = board[piece_y][piece_x]
-        board[piece_y][piece_x] = None
+        dest_y = playerinputclicks[1][0]
+        dest_x = playerinputclicks[1][1]
 
+        board_piece_y = chess_map_from_true_y_to_board_y[piece_y]
+        alpha_piece_x = chess_map_from_index_to_alpha[piece_x]
+
+        board_dest_y = chess_map_from_true_y_to_board_y[dest_y]
+        alpha_dest_x = chess_map_from_index_to_alpha[dest_x]
+
+        print(alpha_piece_x+board_piece_y)
+
+        if str(board[piece_y][piece_x])[1] == "P":
+            pos_moves = getPawnMoves(alpha_piece_x+board_piece_y, board)
+
+        if str(board[piece_y][piece_x])[1] == "R":
+            pos_moves = getRookMoves(alpha_piece_x+board_piece_y, board)
+
+        if str(board[piece_y][piece_x])[1] == "Q":
+            pos_moves = getQueenMoves(alpha_piece_x+board_piece_y, board) 
+
+        if str(board[piece_y][piece_x])[1] == "B":
+            pos_moves = getBishopMoves(alpha_piece_x+board_piece_y, board)
+
+        if str(board[piece_y][piece_x])[1] == "K":
+            if len(str(board[piece_y][piece_x])) == 3:
+                pos_moves = getKnightMoves(alpha_piece_x+board_piece_y, board)
+            else:
+                pos_moves = getKingMoves(alpha_piece_x+board_piece_y, board)
+
+        for i in pos_moves:
+            if(i == alpha_dest_x+board_dest_y):
+                if board[piece_y][piece_x] != None:
+                    if str(board[dest_y][dest_x])[0] == str(board[piece_y][piece_x])[0]:
+                        pass
+                    elif str(board[dest_y][dest_x])[0] != str(board[piece_y][piece_x])[0]:
+                        board[dest_y][dest_x] = board[piece_y][piece_x]
+                        board[piece_y][piece_x] = None
+                    else:
+                        board[dest_y][dest_x] = board[piece_y][piece_x]
+                        board[piece_y][piece_x] = None
+            else:
+                pass
     return board
 
 #all this code until quit i got from here https://levelup.gitconnected.com/chess-python-ca4532c7f5a4 and https://www.youtube.com/watch?v=o24J3WcBGLg
