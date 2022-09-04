@@ -118,6 +118,16 @@ chess_map_from_true_y_to_board_y = {
    6: "2",
    7: "1"}
 
+chess_map_from_board_y_to_true_y = {
+   8: "0",
+   7: "1",
+   6: "2",
+   5: "3",
+   4: "4",
+   3: "5",
+   2: "6",
+   1: "7"}
+
 b_capture_list = []
 w_capture_list = []
 
@@ -372,7 +382,23 @@ def makeMove(board, playerinputclicks):
 
         if str(board[piece_y][piece_x])[1] == "R":
             pos_moves = getRookMoves(alpha_piece_x+board_piece_y, board)
+            upper_y_moves = []
+            lower_y_moves = []
+            left_x_moves = []
+            right_x_moves = []
+            for move in pos_moves:
+                if str(move)[0] == alpha_piece_x and int(str(move)[1]) > int(board_piece_y):
+                    upper_y_moves.append(move)
+                if str(move)[0] == alpha_piece_x and int(str(move)[1]) < int(board_piece_y):
+                    lower_y_moves.append(move)
+                if str(move)[1] == board_piece_y and chess_map_from_alpha_to_index[str(move)[0]] > piece_x:
+                    right_x_moves.append(move)
+                if str(move)[1] == board_piece_y and chess_map_from_alpha_to_index[str(move)[0]] < piece_x:
+                    left_x_moves.append(move)
+            lower_y_moves.reverse()
+            left_x_moves.reverse()
             
+
         if str(board[piece_y][piece_x])[1] == "Q":
             pos_moves = getQueenMoves(alpha_piece_x+board_piece_y, board) 
 
