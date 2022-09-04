@@ -427,6 +427,3 @@ while (running): #press end game then loop stops
     pygame.display.update()
     clock.tick(60)
 pygame.quit()
-
-
-print(getKnightMoves("e5", board))
