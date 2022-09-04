@@ -320,9 +320,13 @@ def draw_board(board):
         for x in range(len(board[0])):
             if board[y][x] != None:
                 screen.blit(piece_dict[board[y][x]], (x_offset + scale*x, y_offset + scale*y))
-
-print(str(board[0][0])[0])
-
+"""
+def showMoves(pos_moves):
+    for move in pos_moves:
+        x_cord = x_offset + scale*int(chess_map_from_alpha_to_index[str(move)[0]])
+        y_cord = y_offset + scale*int(str(move)[1])
+        pygame.draw.circle(screen, (0,0,255), (x_cord, y_cord), 20, 5)
+"""
 def makeMove(board, playerinputclicks):
     piece_y = playerinputclicks[0][0]
     piece_x = playerinputclicks[0][1]
@@ -338,8 +342,6 @@ def makeMove(board, playerinputclicks):
         alpha_dest_x = chess_map_from_index_to_alpha[dest_x]
 
         pos_moves = []
-
-        print(alpha_piece_x+board_piece_y)
 
         if str(board[piece_y][piece_x])[1] == "P":
             if str(board[piece_y][piece_x])[0] == "w":
@@ -370,7 +372,7 @@ def makeMove(board, playerinputclicks):
 
         if str(board[piece_y][piece_x])[1] == "R":
             pos_moves = getRookMoves(alpha_piece_x+board_piece_y, board)
-
+            
         if str(board[piece_y][piece_x])[1] == "Q":
             pos_moves = getQueenMoves(alpha_piece_x+board_piece_y, board) 
 
@@ -382,6 +384,8 @@ def makeMove(board, playerinputclicks):
                 pos_moves = getKnightMoves(alpha_piece_x+board_piece_y, board)
             else:
                 pos_moves = getKingMoves(alpha_piece_x+board_piece_y, board)
+
+        #showMoves(pos_moves)
 
         for i in pos_moves:
             if(i == alpha_dest_x+board_dest_y):
@@ -427,6 +431,3 @@ while (running): #press end game then loop stops
     pygame.display.update()
     clock.tick(60)
 pygame.quit()
-
-
-print(getKnightMoves("e5", board))
