@@ -11,6 +11,10 @@ screen_height = 768
 # create the screen object; size determined by screen_width and screen_height
 screen = pygame.display.set_mode((screen_width, screen_height))
 
+#text parameters
+border_font = pygame.font.Font('freesansbold.ttf', 32)
+title_font = pygame.font.Font('freesansbold.ttf', 75)
+
 #board create
 #board = [['  ' for i in range(8)] for i in range(8)] #https://levelup.gitconnected.com/chess-python-ca4532c7f5a4
 white_piece_list = ["wR", "wKn", "wB", "wQ", "wK", "wP", "wP", "wP", "wP", "wP", "wP", "wP", "wP"]
@@ -32,7 +36,7 @@ bRImg = pygame.image.load('Chess Graphics/chess graphics/chess pieces/bR.png')
 bKnImg = pygame.image.load('Chess Graphics/chess graphics/chess pieces/bKn.png')
 bBImg = pygame.image.load('Chess Graphics/chess graphics/chess pieces/bB.png')
 
-gameDisplay = pygame.display.set_mode((800, 800)) #source it https://pythonprogramming.net/displaying-images-pygame/
+gameDisplay = pygame.display.set_mode((1100, 800)) #source it https://pythonprogramming.net/displaying-images-pygame/
 
 board = [["bR", "bKn", "bB", "bQ", "bK", "bB", "bKn", "bR"],
         ["bP", "bP", "bP", "bP", "bP", "bP", "bP", "bP"],
@@ -111,9 +115,6 @@ def capture(captured_piece_x, captured_piece_y, board):
         w_capture_list.append(board[captured_piece_x][captured_piece_y])
         board[captured_piece_x][captured_piece_y] = None
 
-
-
-
 """THIS WEBSITE HELPED A LOT IN MOVEMENT ALGORITHMS (https://impythonist.wordpress.com/2017/01/01/modeling-a-chessboard-and-mechanics-of-its-pieces-in-python/)"""
 # Rook Moves
 def getRookMoves(pos, board):
@@ -124,7 +125,7 @@ def getRookMoves(pos, board):
     x, y = row, column
     possmoves = []
 
-# Compute the moves in Rank
+    # Compute the moves in Rank
     for y in range(8):
         if y != column:
             possmoves.append((row, y))
@@ -202,7 +203,7 @@ def getBishopMoves(pos, board):
     x, y = row, column
     possmoves = []
 
-# moving diagonal all 4 ways
+    # moving diagonal all 4 ways
     for i in range(8):
         try:
             temp = board[x + i][y + i]
@@ -228,7 +229,7 @@ def getBishopMoves(pos, board):
         except:
             pass
 
-# Filter all negative values
+    # Filter all negative values
     temp = [x for x in possmoves if x[0] >= 0 and x[1] >= 0]
     allPossibleMoves = ["".join([chess_map_from_index_to_alpha[x[1]], str(x[0] + 1)]) for x in temp]
     allPossibleMoves.sort()
@@ -263,32 +264,7 @@ def getKingMoves(pos, board):
     allPossibleMoves.sort()
     return allPossibleMoves
 
-"""PAWN MOVES""" """(https://www.youtube.com/watch?v=F-ZPioOvOaM)"""
 
-
-def getPawnMoves(pos, board):
-# A function(positionString, board) that returns the all possible moves of a pawn stood on a given position
-    column, row = list(pos.strip().lower())
-    row = int(row) - 1
-    column = chess_map_from_alpha_to_index[column]
-    x, y = row, column
-    possmoves = []
-    for i in range(-1, 2):
-        for j in range (-1, 2):
-            if (i != 0) or (j != 0):
-                try:
-                    temp = board[x + i][y + j]
-                    possmoves.append([x + i, y + j])
-                except:
-                    pass
-    # Filter all negative values
-    temp = [x for x in possmoves if x[0] >= 0 and x[1] >= 0]
-    allPossibleMoves = ["".join([chess_map_from_index_to_alpha[x[1]], str(x[0] + 1)]) for x in temp]
-    allPossibleMoves.sort()
-    return allPossibleMoves
-
-
-screen.fill((248, 240, 198))
 #the actual board #check if i got this from somewhere
 chessboard = pygame.image.load("Chess Graphics/chess graphics/chess board/chessboard.jpg").convert()
 screen.blit(chessboard, (10, 10))
@@ -296,24 +272,62 @@ screen.blit(chessboard, (10, 10))
 x_offset = 27
 y_offset = 27
 
-def draw_board(board):
+def draw_board(board, color_to_move, moves):
+    screen.fill((150, 150, 150))
     screen.blit(chessboard, (10, 10))
     for y in range(len(board)):
         for x in range(len(board[0])):
             if board[y][x] != None:
                 screen.blit(piece_dict[board[y][x]], (x_offset + scale*x, y_offset + scale*y))
+    letters = ["a", "b", "c", "d", "e", "f", "g", "h"]
+    numbers = ["1", "2", "3", "4", "5", "6", "7", "8"]
+    numbers.reverse()
+    
+    border_letters = [border_font.render(letter, True, (0, 0, 0)) for letter in letters]
+    [screen.blit(border_letters[i], (50+scale*i, 763)) for i in range(len(letters))]
+    
+    border_numbers = [border_font.render(number, True, (0, 0, 0)) for number in numbers]
+    [screen.blit(border_numbers[i], (763, 45+scale*i)) for i in range(len(numbers))]
+    
+    title = title_font.render("CHESS!", True, (0, 0, 0))
+    screen.blit(title, (800, 30))
+
+    current_player_turn = border_font.render("Current Player:", True, (0, 0, 0))
+    screen.blit(current_player_turn, (815, 120))
+
+    if color_to_move == "w":
+        player = border_font.render("white", True, (255, 255, 255))
+    else:
+        player = border_font.render("black", True, (0, 0, 0))
+    screen.blit(player, (890, 160))
+
+    moves = border_font.render("Moves: "+str(moves), True, (0, 0, 0))
+    screen.blit(moves, (860, 220))
+
+
 """
 def showMoves(pos_moves):
+    print(pos_moves)
     for move in pos_moves:
         x_cord = x_offset + scale*int(chess_map_from_alpha_to_index[str(move)[0]])
         y_cord = y_offset + scale*int(str(move)[1])
         pygame.draw.circle(screen, (0,0,255), (x_cord, y_cord), 20, 5)
 """
-def makeMove(board, playerinputclicks):
+def checkBoard(old_state, current_state):
+    checkBoard = True 
+    for y in range(len(current_state)):
+        for x in range(len(current_state[0])):
+            if old_state[y][x] != current_state[y][x]:
+                checkBoard = False
+    return checkBoard
+
+def makeMove(board, playerinputclicks, color_to_move):
     piece_y = playerinputclicks[0][0]
     piece_x = playerinputclicks[0][1]
 
     if board[piece_y][piece_x] != None:
+        if str(board[piece_y][piece_x])[0] != color_to_move:
+            return board
         dest_y = playerinputclicks[1][0]
         dest_x = playerinputclicks[1][1]
 
@@ -350,14 +364,15 @@ def makeMove(board, playerinputclicks):
                             pos_moves.append(chess_map_from_index_to_alpha[piece_x-1]+chess_map_from_true_y_to_board_y[piece_y+1])
                     if piece_y == 1:
                         pos_moves.append(alpha_piece_x+"5")
-            #pos_moves = getPawnMoves(alpha_piece_x+board_piece_y, board)
-
+            
         if str(board[piece_y][piece_x])[1] == "R":
             pos_moves = getRookMoves(alpha_piece_x+board_piece_y, board)
             upper_y_moves = []
             lower_y_moves = []
             left_x_moves = []
             right_x_moves = []
+            adj_pos_moves = []
+
             for move in pos_moves:
                 if str(move)[0] == alpha_piece_x and int(str(move)[1]) > int(board_piece_y):
                     upper_y_moves.append(move)
@@ -367,23 +382,258 @@ def makeMove(board, playerinputclicks):
                     right_x_moves.append(move)
                 if str(move)[1] == board_piece_y and chess_map_from_alpha_to_index[str(move)[0]] < piece_x:
                     left_x_moves.append(move)
+            
             lower_y_moves.reverse()
             left_x_moves.reverse()
-            
 
+            for move in upper_y_moves:                        
+                x_val = chess_map_from_alpha_to_index[move[0]]
+                board_y = move[1]
+                y_val = chess_map_from_board_y_to_true_y[int(board_y)]
+                
+                if board[int(y_val)][int(x_val)] == None:
+                    adj_pos_moves.append(move)
+                else:
+                    adj_pos_moves.append(move)
+                    break
+            
+            for move in lower_y_moves:                        
+                x_val = chess_map_from_alpha_to_index[move[0]]
+                board_y = move[1]
+                y_val = chess_map_from_board_y_to_true_y[int(board_y)]
+                
+                if board[int(y_val)][int(x_val)] == None:
+                    adj_pos_moves.append(move)
+                else:
+                    adj_pos_moves.append(move)
+                    break
+
+            for move in right_x_moves:                        
+                x_val = chess_map_from_alpha_to_index[move[0]]
+                board_y = move[1]
+                y_val = chess_map_from_board_y_to_true_y[int(board_y)]
+                
+                if board[int(y_val)][int(x_val)] == None:
+                    adj_pos_moves.append(move)
+                else:
+                    adj_pos_moves.append(move)
+                    break
+
+            for move in left_x_moves:                        
+                x_val = chess_map_from_alpha_to_index[move[0]]
+                board_y = move[1]
+                y_val = chess_map_from_board_y_to_true_y[int(board_y)]
+                
+                if board[int(y_val)][int(x_val)] == None:
+                    adj_pos_moves.append(move)
+                else:
+                    adj_pos_moves.append(move)
+                    break
+
+            pos_moves = adj_pos_moves    
+                    
         if str(board[piece_y][piece_x])[1] == "Q":
             pos_moves = getQueenMoves(alpha_piece_x+board_piece_y, board) 
+            
+            upper_y_moves = []
+            lower_y_moves = []
+            left_x_moves = []
+            right_x_moves = []
+            adj_pos_moves = []
+
+            for move in pos_moves:
+                if str(move)[0] == alpha_piece_x and int(str(move)[1]) > int(board_piece_y):
+                    upper_y_moves.append(move)
+                if str(move)[0] == alpha_piece_x and int(str(move)[1]) < int(board_piece_y):
+                    lower_y_moves.append(move)
+                if str(move)[1] == board_piece_y and chess_map_from_alpha_to_index[str(move)[0]] > piece_x:
+                    right_x_moves.append(move)
+                if str(move)[1] == board_piece_y and chess_map_from_alpha_to_index[str(move)[0]] < piece_x:
+                    left_x_moves.append(move)
+            
+            lower_y_moves.reverse()
+            left_x_moves.reverse()
+
+            for move in upper_y_moves:                        
+                x_val = chess_map_from_alpha_to_index[move[0]]
+                board_y = move[1]
+                y_val = chess_map_from_board_y_to_true_y[int(board_y)]
+                
+                if board[int(y_val)][int(x_val)] == None:
+                    adj_pos_moves.append(move)
+                else:
+                    adj_pos_moves.append(move)
+                    break
+            
+            for move in lower_y_moves:                        
+                x_val = chess_map_from_alpha_to_index[move[0]]
+                board_y = move[1]
+                y_val = chess_map_from_board_y_to_true_y[int(board_y)]
+                
+                if board[int(y_val)][int(x_val)] == None:
+                    adj_pos_moves.append(move)
+                else:
+                    adj_pos_moves.append(move)
+                    break
+
+            for move in right_x_moves:                        
+                x_val = chess_map_from_alpha_to_index[move[0]]
+                board_y = move[1]
+                y_val = chess_map_from_board_y_to_true_y[int(board_y)]
+                
+                if board[int(y_val)][int(x_val)] == None:
+                    adj_pos_moves.append(move)
+                else:
+                    adj_pos_moves.append(move)
+                    break
+
+            for move in left_x_moves:                        
+                x_val = chess_map_from_alpha_to_index[move[0]]
+                board_y = move[1]
+                y_val = chess_map_from_board_y_to_true_y[int(board_y)]
+                
+                if board[int(y_val)][int(x_val)] == None:
+                    adj_pos_moves.append(move)
+                else:
+                    adj_pos_moves.append(move)
+                    break
+
+            upper_right_moves = []
+            upper_left_moves = []
+            lower_right_moves = []
+            lower_left_moves = []
+            
+            for move in pos_moves:
+                if str(move)[0] > alpha_piece_x and int(str(move)[1]) > int(board_piece_y):
+                    upper_right_moves.append(move)
+                if str(move)[0] > alpha_piece_x and int(str(move)[1]) < int(board_piece_y):
+                    lower_right_moves.append(move)
+                if str(move)[0] < alpha_piece_x and int(str(move)[1]) > int(board_piece_y):
+                    upper_left_moves.append(move)
+                if str(move)[0] < alpha_piece_x and int(str(move)[1]) < int(board_piece_y):
+                    lower_left_moves.append(move)
+
+            upper_left_moves.reverse()
+            lower_left_moves.reverse()
+
+            for move in upper_right_moves:                        
+                x_val = chess_map_from_alpha_to_index[move[0]]
+                board_y = move[1]
+                y_val = chess_map_from_board_y_to_true_y[int(board_y)]
+                
+                if board[int(y_val)][int(x_val)] == None:
+                    adj_pos_moves.append(move)
+                else:
+                    adj_pos_moves.append(move)
+                    break
+            
+            for move in upper_left_moves:                        
+                x_val = chess_map_from_alpha_to_index[move[0]]
+                board_y = move[1]
+                y_val = chess_map_from_board_y_to_true_y[int(board_y)]
+                
+                if board[int(y_val)][int(x_val)] == None:
+                    adj_pos_moves.append(move)
+                else:
+                    adj_pos_moves.append(move)
+                    break
+
+            for move in lower_right_moves:                        
+                x_val = chess_map_from_alpha_to_index[move[0]]
+                board_y = move[1]
+                y_val = chess_map_from_board_y_to_true_y[int(board_y)]
+                
+                if board[int(y_val)][int(x_val)] == None:
+                    adj_pos_moves.append(move)
+                else:
+                    adj_pos_moves.append(move)
+                    break
+
+            for move in lower_left_moves:                        
+                x_val = chess_map_from_alpha_to_index[move[0]]
+                board_y = move[1]
+                y_val = chess_map_from_board_y_to_true_y[int(board_y)]
+                
+                if board[int(y_val)][int(x_val)] == None:
+                    adj_pos_moves.append(move)
+                else:
+                    adj_pos_moves.append(move)
+                    break
+
+            pos_moves = adj_pos_moves
 
         if str(board[piece_y][piece_x])[1] == "B":
             pos_moves = getBishopMoves(alpha_piece_x+board_piece_y, board)
+            upper_right_moves = []
+            upper_left_moves = []
+            lower_right_moves = []
+            lower_left_moves = []
+            adj_pos_moves = []
+
+            for move in pos_moves:
+                if str(move)[0] > alpha_piece_x and int(str(move)[1]) > int(board_piece_y):
+                    upper_right_moves.append(move)
+                if str(move)[0] > alpha_piece_x and int(str(move)[1]) < int(board_piece_y):
+                    lower_right_moves.append(move)
+                if str(move)[0] < alpha_piece_x and int(str(move)[1]) > int(board_piece_y):
+                    upper_left_moves.append(move)
+                if str(move)[0] < alpha_piece_x and int(str(move)[1]) < int(board_piece_y):
+                    lower_left_moves.append(move)
+
+            upper_left_moves.reverse()
+            lower_left_moves.reverse()
+
+            for move in upper_right_moves:                        
+                x_val = chess_map_from_alpha_to_index[move[0]]
+                board_y = move[1]
+                y_val = chess_map_from_board_y_to_true_y[int(board_y)]
+                
+                if board[int(y_val)][int(x_val)] == None:
+                    adj_pos_moves.append(move)
+                else:
+                    adj_pos_moves.append(move)
+                    break
+            
+            for move in upper_left_moves:                        
+                x_val = chess_map_from_alpha_to_index[move[0]]
+                board_y = move[1]
+                y_val = chess_map_from_board_y_to_true_y[int(board_y)]
+                
+                if board[int(y_val)][int(x_val)] == None:
+                    adj_pos_moves.append(move)
+                else:
+                    adj_pos_moves.append(move)
+                    break
+
+            for move in lower_right_moves:                        
+                x_val = chess_map_from_alpha_to_index[move[0]]
+                board_y = move[1]
+                y_val = chess_map_from_board_y_to_true_y[int(board_y)]
+                
+                if board[int(y_val)][int(x_val)] == None:
+                    adj_pos_moves.append(move)
+                else:
+                    adj_pos_moves.append(move)
+                    break
+
+            for move in lower_left_moves:                        
+                x_val = chess_map_from_alpha_to_index[move[0]]
+                board_y = move[1]
+                y_val = chess_map_from_board_y_to_true_y[int(board_y)]
+                
+                if board[int(y_val)][int(x_val)] == None:
+                    adj_pos_moves.append(move)
+                else:
+                    adj_pos_moves.append(move)
+                    break
+            
+            pos_moves = adj_pos_moves                
 
         if str(board[piece_y][piece_x])[1] == "K":
             if len(str(board[piece_y][piece_x])) == 3:
                 pos_moves = getKnightMoves(alpha_piece_x+board_piece_y, board)
             else:
                 pos_moves = getKingMoves(alpha_piece_x+board_piece_y, board)
-
-        #showMoves(pos_moves)
 
         for i in pos_moves:
             if(i == alpha_dest_x+board_dest_y):
@@ -404,6 +654,11 @@ def makeMove(board, playerinputclicks):
 running = True
 selectedsquare = ()
 playerinputclicks = []
+
+color_to_move = "w"
+
+old_state = [[board[y][x] for x in range(len(board[0]))] for y in range(len(board))]
+moves = 0
 while (running): #press end game then loop stops
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -419,13 +674,20 @@ while (running): #press end game then loop stops
                 selectedsquare = ()
                 #playerinputclicks = []
                 if len(playerinputclicks) >= 2:
-                    board = makeMove(board, playerinputclicks)
+                    board = makeMove(board, playerinputclicks, color_to_move)
                     selectedsquare = ()
                     playerinputclicks = []
+            if not checkBoard(old_state, board):
+                if color_to_move == "w":
+                    color_to_move = "b"
+                elif color_to_move == "b":
+                    color_to_move = "w"
+                old_state = [[board[y][x] for x in range(len(board[0]))] for y in range(len(board))]
+                moves += 1
 
             #if len(playerinputclicks) == 2: #storing the moves
 
-    draw_board(board)
+    draw_board(board, color_to_move, moves)
     pygame.display.update()
     clock.tick(60)
 pygame.quit()
