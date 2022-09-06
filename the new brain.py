@@ -679,30 +679,27 @@ def checkCheckmate(board, color_to_move):
     uncheckables = []
 
     if check == True:
+        """
         if color_to_move == "w":
             king_color = "b"
         if color_to_move == "b":
             king_color = "w"
+        """
         for y in range(len(board)):
             for x in range(len(board[0])):
-                pos_moves.append(possibleMoves(board, x, y, color_to_move))
+                pos_moves.extend(possibleMoves(board, x, y, color_to_move))
                 for i in pos_moves:
-                    dest_x = chess_map_from_alpha_to_index[str(i)[0]]
-                    dest_y = chess_map_from_board_y_to_true_y[str(i)[1]]
-                    if board[piece_y][piece_x] != None:
-                        if str(board[dest_y][dest_x])[0] == str(board[piece_y][piece_x])[0]:
-                            pass
-                        elif str(board[dest_y][dest_x])[0] != str(board[y][x])[0]:
+                    print(i)
+                    dest_x = int(chess_map_from_alpha_to_index[str(i)[0]])
+                    dest_y = int(chess_map_from_board_y_to_true_y[int(str(i)[1])])
+                    if board[y][x] != None:
+                        if str(board[dest_y][dest_x])[0] != str(board[y][x])[0]:
                             test_board[dest_y][dest_x] = test_board[y][x]
                             test_board[y][x] = None
-                            
-                        else:
-                            test_board[dest_y][dest_x] = test_board[y][x]
-                            test_board[y][x] = None
-                        if checkCheck(test_board, check_color) == False:
-                            uncheckables.append(move)
-                            print(uncheckables)
-        if uncheckables == []:
+                        if checkCheck(test_board, color_to_move):
+                            uncheckables.append(i)
+        print(uncheckables)
+        if len(uncheckables) == 0:
             print("checkmatw")
 
 def makeMove(board, playerinputclicks, color_to_move):
