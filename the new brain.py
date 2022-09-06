@@ -694,7 +694,6 @@ def checkCheckmate(board, color_to_move):
     pos_moves = []
     uncheckables = []
 
-    print("here?")
     if check == True:
         
         if color_to_move == "w":
@@ -711,7 +710,22 @@ def checkCheckmate(board, color_to_move):
                                 test_board[y][x] = None
                             if checkCheck(test_board, color_to_move) == True:
                                 uncheckables.append(i)
+        if color_to_move == "b":
+            for y in range(len(board)):
+                for x in range(len(board[0])):
+                    if str(board[y][x])[0] == "w":
+                        pos_moves.extend(possibleMoves(board, x, y, color_to_move))
+                        for i in pos_moves:
                             
+                            dest_x = int(chess_map_from_alpha_to_index[str(i)[0]])
+                            dest_y = int(chess_map_from_board_y_to_true_y[int(str(i)[1])])
+                            if board[y][x] != None:
+                                if str(board[dest_y][dest_x])[0] != str(board[y][x])[0]:
+                                    test_board[dest_y][dest_x] = test_board[y][x]
+                                    test_board[y][x] = None
+                                if checkCheck(test_board, color_to_move) == True:
+                                    uncheckables.append(i)
+
         if len(uncheckables) == 0:
             checkmate = True
     return checkmate
