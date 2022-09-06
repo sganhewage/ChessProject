@@ -719,6 +719,7 @@ def makeMove(board, playerinputclicks, color_to_move):
                         board[piece_y][piece_x] = None
             else:
                 pass
+
     return board
 
 #all this code until quit i got from here https://levelup.gitconnected.com/chess-python-ca4532c7f5a4 and https://www.youtube.com/watch?v=o24J3WcBGLg
