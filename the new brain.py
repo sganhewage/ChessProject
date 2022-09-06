@@ -668,7 +668,19 @@ def checkCheck(board, color_to_move):
         if alpha_king_cords in i:
             check = True 
     return check
+"""
+def checkCheckmate(board, color_to_move):
 
+    checkCheck(board, color_to_move)
+    pos_moves = []
+    if check == True 
+       
+
+    if color_to_move == "w":
+        king_color = "b"
+    if color_to_move == "b":
+        king_color = "w"
+"""
 def makeMove(board, playerinputclicks, color_to_move):
     piece_y = playerinputclicks[0][0]
     piece_x = playerinputclicks[0][1]
@@ -719,7 +731,6 @@ def makeMove(board, playerinputclicks, color_to_move):
                         board[piece_y][piece_x] = None
             else:
                 pass
-
     return board
 
 #all this code until quit i got from here https://levelup.gitconnected.com/chess-python-ca4532c7f5a4 and https://www.youtube.com/watch?v=o24J3WcBGLg
