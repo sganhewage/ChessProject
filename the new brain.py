@@ -57,34 +57,6 @@ piece_dict = {"wP": wPImg,
              "bB": bBImg}
 
 
-"""User Input and Graphics"""
-
-"""MOVEMENT ALGORITHMS"""
-
-"""# Creating Teams for Black and White (https://levelup.gitconnected.com/chess-python-ca4532c7f5a4)
-class Piece:
-    def __init__(self, team, type, image, killable=False):
-        self.team = team
-        self.type = type
-        self.killable = killable
-        self.image = image
-"""
-"""
-bP = Piece('b', 'P', 'Chess Graphics/chess graphics/chess pieces/bP.png')
-wP = Piece('w', 'P', 'Chess Graphics/chess graphics/chess pieces/wP.png')
-bK = Piece('b', 'K', 'Chess Graphics/chess graphics/chess pieces/bK.png')
-wK = Piece('w', 'K', 'Chess Graphics/chess graphics/chess pieces/wK.png')
-bR = Piece('b', 'R', 'Chess Graphics/chess graphics/chess pieces/bR.png')
-wR = Piece('w', 'R', 'Chess Graphics/chess graphics/chess pieces/wR.png')
-bB = Piece('b', 'B', 'Chess Graphics/chess graphics/chess pieces/bB.png')
-wB = Piece('w', 'B', 'Chess Graphics/chess graphics/chess pieces/wB.png')
-bQ = Piece('b', 'Q', 'Chess Graphics/chess graphics/chess pieces/bQ.png')
-wQ= Piece('w', 'Q', 'Chess Graphics/chess graphics/chess pieces/wQ.png')
-bKn = Piece('b', 'Kn', 'Chess Graphics/chess graphics/chess pieces/bKn.png')
-wKn = Piece('w', 'Kn', 'Chess Graphics/chess graphics/chess pieces/wKn.png')
-"""
-
-
 #https://impythonist.wordpress.com/2017/01/01/modeling-a-chessboard-and-mechanics-of-its-pieces-in-python/
 #assigning each space one the board a value (ex A4)
 #https://impythonist.wordpress.com/2017/01/01/modeling-a-chessboard-and-mechanics-of-its-pieces-in-python/
