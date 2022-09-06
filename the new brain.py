@@ -272,8 +272,8 @@ screen.blit(chessboard, (10, 10))
 x_offset = 27
 y_offset = 27
 
-def draw_board(board, color_to_move, moves):
-    screen.fill((150, 150, 150))
+def draw_board(board, color_to_move, moves, check):
+    screen.fill((75, 75, 75))
     screen.blit(chessboard, (10, 10))
     for y in range(len(board)):
         for x in range(len(board[0])):
@@ -304,6 +304,10 @@ def draw_board(board, color_to_move, moves):
     moves = border_font.render("Moves: "+str(moves), True, (0, 0, 0))
     screen.blit(moves, (860, 220))
 
+    if check == True:
+        check_text = border_font.render("Check!", True, (255, 0, 0))
+        screen.blit(check_text, (880, 270))
+
 
 """
 def showMoves(pos_moves):
@@ -321,29 +325,31 @@ def checkBoard(old_state, current_state):
                 checkBoard = False
     return checkBoard
 
-def makeMove(board, playerinputclicks, color_to_move):
-    piece_y = playerinputclicks[0][0]
-    piece_x = playerinputclicks[0][1]
-
+def possibleMoves(board, x, y, color_to_move):
+    piece_y = y
+    piece_x = x
+    pos_moves = []
     if board[piece_y][piece_x] != None:
         if str(board[piece_y][piece_x])[0] != color_to_move:
-            return board
+            return pos_moves
+        """
         dest_y = playerinputclicks[1][0]
         dest_x = playerinputclicks[1][1]
-
+        """
         board_piece_y = chess_map_from_true_y_to_board_y[piece_y]
         alpha_piece_x = chess_map_from_index_to_alpha[piece_x]
-
+        """
         board_dest_y = chess_map_from_true_y_to_board_y[dest_y]
         alpha_dest_x = chess_map_from_index_to_alpha[dest_x]
-
+        """
         pos_moves = []
 
         if str(board[piece_y][piece_x])[1] == "P":
             if str(board[piece_y][piece_x])[0] == "w":
                 #SETUP FOR PROMOTION IMPLEMENTATION
                 if piece_y != 0:
-                    pos_moves.append(alpha_piece_x+str((int(board_piece_y)+1)))
+                    if board[piece_y-1][piece_x] == None:
+                        pos_moves.append(alpha_piece_x+str((int(board_piece_y)+1)))
                     if piece_x != 7:
                         if str(board[piece_y-1][piece_x+1])[0] == "b":
                             pos_moves.append(chess_map_from_index_to_alpha[piece_x+1]+chess_map_from_true_y_to_board_y[piece_y-1])
@@ -352,18 +358,24 @@ def makeMove(board, playerinputclicks, color_to_move):
                             pos_moves.append(chess_map_from_index_to_alpha[piece_x-1]+chess_map_from_true_y_to_board_y[piece_y-1])
                     if piece_y == 6:
                         pos_moves.append(alpha_piece_x+"4")
+                if piece_y == 0:
+                    board[piece_y][piece_x] = "wQ"
+
             if str(board[piece_y][piece_x])[0] == "b":
                 #SETUP FOR PROMOTION IMPLEMENTATION
                 if piece_y != 7:
-                    pos_moves.append(alpha_piece_x+str((int(board_piece_y)-1)))
+                    if board[piece_y+1][piece_x] == None:
+                        pos_moves.append(alpha_piece_x+str((int(board_piece_y)-1)))
                     if piece_x != 7:
                         if str(board[piece_y+1][piece_x+1])[0] == "w":
                             pos_moves.append(chess_map_from_index_to_alpha[piece_x+1]+chess_map_from_true_y_to_board_y[piece_y+1])
-                    if piece_x != 7:
+                    if piece_x != 0:
                         if str(board[piece_y+1][piece_x-1])[0] == "w":
                             pos_moves.append(chess_map_from_index_to_alpha[piece_x-1]+chess_map_from_true_y_to_board_y[piece_y+1])
                     if piece_y == 1:
                         pos_moves.append(alpha_piece_x+"5")
+                if piece_y == 7:
+                    board[piece_y][piece_x] = "bQ"
             
         if str(board[piece_y][piece_x])[1] == "R":
             pos_moves = getRookMoves(alpha_piece_x+board_piece_y, board)
@@ -634,10 +646,69 @@ def makeMove(board, playerinputclicks, color_to_move):
                 pos_moves = getKnightMoves(alpha_piece_x+board_piece_y, board)
             else:
                 pos_moves = getKingMoves(alpha_piece_x+board_piece_y, board)
+    return pos_moves
 
+def checkCheck(board, color_to_move):
+    pos_moves = []
+
+    if color_to_move == "w":
+        king_color = "b"
+    if color_to_move == "b":
+        king_color = "w"
+
+    for y in range(len(board)):
+        for x in range(len(board[0])):
+            pos_moves.append(possibleMoves(board, x, y, color_to_move))
+    for y in range(len(board)):
+        try: king_cords = [y,board[y].index(king_color+"K")]
+        except: pass
+    alpha_king_cords = str(chess_map_from_index_to_alpha[king_cords[1]]+chess_map_from_true_y_to_board_y[king_cords[0]])
+    check = False
+    for i in pos_moves:
+        if alpha_king_cords in i:
+            check = True 
+    return check
+
+def makeMove(board, playerinputclicks, color_to_move):
+    piece_y = playerinputclicks[0][0]
+    piece_x = playerinputclicks[0][1]
+
+    if color_to_move == "w":
+        check_color = "b"
+    if color_to_move == "b":
+        check_color = "w"
+
+    check_board = [[board[y][x] for x in range(len(board[0]))] for y in range(len(board))]
+
+    if board[piece_y][piece_x] != None:
+        if str(board[piece_y][piece_x])[0] != color_to_move:
+            return board
+        dest_y = playerinputclicks[1][0]
+        dest_x = playerinputclicks[1][1]
+
+        board_piece_y = chess_map_from_true_y_to_board_y[piece_y]
+        alpha_piece_x = chess_map_from_index_to_alpha[piece_x]
+
+        board_dest_y = chess_map_from_true_y_to_board_y[dest_y]
+        alpha_dest_x = chess_map_from_index_to_alpha[dest_x]
+
+        pos_moves = possibleMoves(board, piece_x, piece_y, color_to_move)
         for i in pos_moves:
             if(i == alpha_dest_x+board_dest_y):
                 if board[piece_y][piece_x] != None:
+                    if str(board[dest_y][dest_x])[0] == str(board[piece_y][piece_x])[0]:
+                        pass
+                    elif str(board[dest_y][dest_x])[0] != str(board[piece_y][piece_x])[0]:
+                        check_board[dest_y][dest_x] = check_board[piece_y][piece_x]
+                        check_board[piece_y][piece_x] = None
+                        
+                    else:
+                        check_board[dest_y][dest_x] = check_board[piece_y][piece_x]
+                        check_board[piece_y][piece_x] = None
+
+                    if checkCheck(check_board, check_color) == True:
+                        return board 
+                    
                     if str(board[dest_y][dest_x])[0] == str(board[piece_y][piece_x])[0]:
                         pass
                     elif str(board[dest_y][dest_x])[0] != str(board[piece_y][piece_x])[0]:
@@ -658,6 +729,8 @@ playerinputclicks = []
 color_to_move = "w"
 
 old_state = [[board[y][x] for x in range(len(board[0]))] for y in range(len(board))]
+check = False
+
 moves = 0
 while (running): #press end game then loop stops
     for event in pygame.event.get():
@@ -675,9 +748,12 @@ while (running): #press end game then loop stops
                 #playerinputclicks = []
                 if len(playerinputclicks) >= 2:
                     board = makeMove(board, playerinputclicks, color_to_move)
+                    draw_board(board, color_to_move, moves, check)
                     selectedsquare = ()
                     playerinputclicks = []
+            
             if not checkBoard(old_state, board):
+                check = checkCheck(board, color_to_move)
                 if color_to_move == "w":
                     color_to_move = "b"
                 elif color_to_move == "b":
@@ -685,9 +761,10 @@ while (running): #press end game then loop stops
                 old_state = [[board[y][x] for x in range(len(board[0]))] for y in range(len(board))]
                 moves += 1
 
+        
             #if len(playerinputclicks) == 2: #storing the moves
 
-    draw_board(board, color_to_move, moves)
+    draw_board(board, color_to_move, moves, check)
     pygame.display.update()
     clock.tick(60)
 pygame.quit()
