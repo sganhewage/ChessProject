@@ -4,11 +4,11 @@ import chess
 #from PIL import Image
 pygame.init()
 
-# define constants for the screen width and height
+# Dimensions of the screen
 screen_width = 1376
 screen_height = 768
 
-# create the screen object; size determined by screen_width and screen_height
+# Creating the pygame window
 screen = pygame.display.set_mode((screen_width, screen_height))
 
 #text parameters
@@ -265,14 +265,14 @@ def getKingMoves(pos, board):
     return allPossibleMoves
 
 
-#the actual board #check if i got this from somewhere
+# The chess board
 chessboard = pygame.image.load("Chess Graphics/chess graphics/chess board/chessboard.jpg").convert()
 screen.blit(chessboard, (10, 10))
 
 x_offset = 27
 y_offset = 27
 
-def draw_board(board, color_to_move, moves, check):
+def draw_board(board, color_to_move, moves, check, checkmate):
     screen.fill((75, 75, 75))
     screen.blit(chessboard, (10, 10))
     for y in range(len(board)):
@@ -308,6 +308,15 @@ def draw_board(board, color_to_move, moves, check):
         check_text = border_font.render("Check!", True, (255, 0, 0))
         screen.blit(check_text, (880, 270))
 
+    if checkmate == True:
+        checkmate_text = title_font.render("Checkmate!", True, (255, 0, 0))
+        screen.blit(checkmate_text, (165, 350))
+        if color_to_move == "w":
+            winner_text = border_font.render("Black Wins!", True, (0, 0, 0))
+            screen.blit(winner_text, (200, 420))
+        if color_to_move == "b":
+            winner_text = border_font.render("White Wins!", True, (0, 0, 0))
+            screen.blit(winner_text, (200, 420))
 
 """
 def showMoves(pos_moves):
@@ -356,8 +365,10 @@ def possibleMoves(board, x, y, color_to_move):
                     if piece_x != 0:
                         if str(board[piece_y-1][piece_x-1])[0] == "b":
                             pos_moves.append(chess_map_from_index_to_alpha[piece_x-1]+chess_map_from_true_y_to_board_y[piece_y-1])
-                    if piece_y == 6:
+                    if piece_y == 6: 
                         pos_moves.append(alpha_piece_x+"4")
+                        if board[piece_y-2][piece_x] != None:
+                            pos_moves.remove(alpha_piece_x+"4")
                 if piece_y == 0:
                     board[piece_y][piece_x] = "wQ"
 
@@ -374,6 +385,8 @@ def possibleMoves(board, x, y, color_to_move):
                             pos_moves.append(chess_map_from_index_to_alpha[piece_x-1]+chess_map_from_true_y_to_board_y[piece_y+1])
                     if piece_y == 1:
                         pos_moves.append(alpha_piece_x+"5")
+                        if board[piece_y+2][piece_x] != None:
+                            pos_moves.remove(alpha_piece_x+"5")
                 if piece_y == 7:
                     board[piece_y][piece_x] = "bQ"
             
@@ -655,13 +668,15 @@ def checkCheck(board, color_to_move):
         king_color = "b"
     if color_to_move == "b":
         king_color = "w"
-
+    king_cords = [0, 4]
     for y in range(len(board)):
         for x in range(len(board[0])):
             pos_moves.append(possibleMoves(board, x, y, color_to_move))
     for y in range(len(board)):
+        
         try: king_cords = [y,board[y].index(king_color+"K")]
         except: pass
+        
     alpha_king_cords = str(chess_map_from_index_to_alpha[king_cords[1]]+chess_map_from_true_y_to_board_y[king_cords[0]])
     check = False
     for i in pos_moves:
@@ -675,32 +690,31 @@ def checkCheckmate(board, color_to_move):
     
     test_board = [[board[y][x] for x in range(len(board[0]))] for y in range(len(board))]
 
+    checkmate = False
     pos_moves = []
     uncheckables = []
 
+    print("here?")
     if check == True:
-        """
+        
         if color_to_move == "w":
-            king_color = "b"
-        if color_to_move == "b":
-            king_color = "w"
-        """
-        for y in range(len(board)):
-            for x in range(len(board[0])):
-                pos_moves.extend(possibleMoves(board, x, y, color_to_move))
-                for i in pos_moves:
-                    print(i)
-                    dest_x = int(chess_map_from_alpha_to_index[str(i)[0]])
-                    dest_y = int(chess_map_from_board_y_to_true_y[int(str(i)[1])])
-                    if board[y][x] != None:
-                        if str(board[dest_y][dest_x])[0] != str(board[y][x])[0]:
-                            test_board[dest_y][dest_x] = test_board[y][x]
-                            test_board[y][x] = None
-                        if checkCheck(test_board, color_to_move):
-                            uncheckables.append(i)
-        print(uncheckables)
+            for y in range(len(board)):
+                for x in range(len(board[0])):
+                    pos_moves.extend(possibleMoves(board, x, y, color_to_move))
+                    for i in pos_moves:
+                        
+                        dest_x = int(chess_map_from_alpha_to_index[str(i)[0]])
+                        dest_y = int(chess_map_from_board_y_to_true_y[int(str(i)[1])])
+                        if board[y][x] != None:
+                            if str(board[dest_y][dest_x])[0] != str(board[y][x])[0]:
+                                test_board[dest_y][dest_x] = test_board[y][x]
+                                test_board[y][x] = None
+                            if checkCheck(test_board, color_to_move) == True:
+                                uncheckables.append(i)
+                            
         if len(uncheckables) == 0:
-            print("checkmatw")
+            checkmate = True
+    return checkmate
 
 def makeMove(board, playerinputclicks, color_to_move):
     piece_y = playerinputclicks[0][0]
@@ -752,7 +766,7 @@ def makeMove(board, playerinputclicks, color_to_move):
                         board[piece_y][piece_x] = None
             else:
                 pass
-    checkCheckmate(board, color_to_move)
+    checkMate = checkCheckmate(board, color_to_move)
     return board
 
 #all this code until quit i got from here https://levelup.gitconnected.com/chess-python-ca4532c7f5a4 and https://www.youtube.com/watch?v=o24J3WcBGLg
@@ -764,6 +778,7 @@ color_to_move = "w"
 
 old_state = [[board[y][x] for x in range(len(board[0]))] for y in range(len(board))]
 check = False
+checkmate = False
 
 moves = 0
 while (running): #press end game then loop stops
@@ -782,7 +797,8 @@ while (running): #press end game then loop stops
                 #playerinputclicks = []
                 if len(playerinputclicks) >= 2:
                     board = makeMove(board, playerinputclicks, color_to_move)
-                    draw_board(board, color_to_move, moves, check)
+                    checkmate = checkCheckmate(board, color_to_move)
+                    draw_board(board, color_to_move, moves, check, checkmate)
                     selectedsquare = ()
                     playerinputclicks = []
             
@@ -798,7 +814,7 @@ while (running): #press end game then loop stops
         
             #if len(playerinputclicks) == 2: #storing the moves
 
-    draw_board(board, color_to_move, moves, check)
+    draw_board(board, color_to_move, moves, check, checkmate)
     pygame.display.update()
     clock.tick(60)
 pygame.quit()
