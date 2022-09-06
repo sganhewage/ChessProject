@@ -14,6 +14,7 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 #text parameters
 border_font = pygame.font.Font('freesansbold.ttf', 32)
 title_font = pygame.font.Font('freesansbold.ttf', 75)
+captures_font = pygame.font.Font('freesansbold.ttf', 25)
 
 #board create
 #board = [['  ' for i in range(8)] for i in range(8)] #https://levelup.gitconnected.com/chess-python-ca4532c7f5a4
@@ -104,16 +105,15 @@ chess_map_from_board_y_to_true_y = {
    2: "6",
    1: "7"}
 
+piece_letter_to_name = {
+   "P": "pawn",
+   "R": "rook",
+   "K": "knight",
+   "B": "bishop",
+   "Q": "queen"}
+
 b_capture_list = []
 w_capture_list = []
-
-def capture(captured_piece_x, captured_piece_y, board):
-    if str(board[captured_piece_x][captured_piece_y])[0] == "b":
-        b_capture_list.append(board[captured_piece_x][captured_piece_y])
-        board[captured_piece_x][captured_piece_y] = None
-    else:
-        w_capture_list.append(board[captured_piece_x][captured_piece_y])
-        board[captured_piece_x][captured_piece_y] = None
 
 """THIS WEBSITE HELPED A LOT IN MOVEMENT ALGORITHMS (https://impythonist.wordpress.com/2017/01/01/modeling-a-chessboard-and-mechanics-of-its-pieces-in-python/)"""
 # Rook Moves
@@ -318,14 +318,25 @@ def draw_board(board, color_to_move, moves, check, checkmate):
             winner_text = border_font.render("White Wins!", True, (0, 0, 0))
             screen.blit(winner_text, (200, 420))
 
-"""
-def showMoves(pos_moves):
-    print(pos_moves)
-    for move in pos_moves:
-        x_cord = x_offset + scale*int(chess_map_from_alpha_to_index[str(move)[0]])
-        y_cord = y_offset + scale*int(str(move)[1])
-        pygame.draw.circle(screen, (0,0,255), (x_cord, y_cord), 20, 5)
-"""
+    divider = title_font.render("______", True, (255, 255, 255))
+    screen.blit(divider, (800, 190))
+
+    #Captures
+    capture_title_text = border_font.render("Captures", True, (0, 0, 0))
+    screen.blit(capture_title_text, (865, 310))
+    
+    black_capture_text = border_font.render("Black", True, (0, 0, 0))
+    screen.blit(black_capture_text, (810, 350))
+    
+    white_capture_text = border_font.render("White", True, (255, 255, 255))
+    screen.blit(white_capture_text, (950, 350))
+    
+    black_captures = [captures_font.render(str(capture), True, (30, 30, 30)) for capture in b_capture_list]
+    [screen.blit(black_captures[i], (820, 390+30*i)) for i in range(len(b_capture_list))]
+
+    white_captures = [captures_font.render(str(capture), True, (30, 30, 30)) for capture in w_capture_list]
+    [screen.blit(white_captures[i], (960, 390+30*i)) for i in range(len(w_capture_list))]
+
 def checkBoard(old_state, current_state):
     checkBoard = True 
     for y in range(len(current_state)):
@@ -773,6 +784,10 @@ def makeMove(board, playerinputclicks, color_to_move):
                     if str(board[dest_y][dest_x])[0] == str(board[piece_y][piece_x])[0]:
                         pass
                     elif str(board[dest_y][dest_x])[0] != str(board[piece_y][piece_x])[0]:
+                        if str(board[dest_y][dest_x])[0] == "b":
+                            b_capture_list.append(piece_letter_to_name[str(board[dest_y][dest_x])[1]])
+                        if str(board[dest_y][dest_x])[0] == "w":
+                            w_capture_list.append(piece_letter_to_name[str(board[dest_y][dest_x])[1]])
                         board[dest_y][dest_x] = board[piece_y][piece_x]
                         board[piece_y][piece_x] = None
                     else:
@@ -780,6 +795,8 @@ def makeMove(board, playerinputclicks, color_to_move):
                         board[piece_y][piece_x] = None
             else:
                 pass
+    print(b_capture_list)
+    print(w_capture_list)
     checkMate = checkCheckmate(board, color_to_move)
     return board
 
