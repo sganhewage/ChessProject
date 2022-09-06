@@ -668,19 +668,43 @@ def checkCheck(board, color_to_move):
         if alpha_king_cords in i:
             check = True 
     return check
-"""
+
 def checkCheckmate(board, color_to_move):
 
     checkCheck(board, color_to_move)
-    pos_moves = []
-    if check == True 
-       
+    
+    test_board = [[board[y][x] for x in range(len(board[0]))] for y in range(len(board))]
 
-    if color_to_move == "w":
-        king_color = "b"
-    if color_to_move == "b":
-        king_color = "w"
-"""
+    pos_moves = []
+    uncheckables = []
+
+    if check == True:
+        if color_to_move == "w":
+            king_color = "b"
+        if color_to_move == "b":
+            king_color = "w"
+        for y in range(len(board)):
+            for x in range(len(board[0])):
+                pos_moves.append(possibleMoves(board, x, y, color_to_move))
+                for i in pos_moves:
+                    dest_x = chess_map_from_alpha_to_index[str(i)[0]]
+                    dest_y = chess_map_from_board_y_to_true_y[str(i)[1]]
+                    if board[piece_y][piece_x] != None:
+                        if str(board[dest_y][dest_x])[0] == str(board[piece_y][piece_x])[0]:
+                            pass
+                        elif str(board[dest_y][dest_x])[0] != str(board[y][x])[0]:
+                            test_board[dest_y][dest_x] = test_board[y][x]
+                            test_board[y][x] = None
+                            
+                        else:
+                            test_board[dest_y][dest_x] = test_board[y][x]
+                            test_board[y][x] = None
+                        if checkCheck(test_board, check_color) == False:
+                            uncheckables.append(move)
+                            print(uncheckables)
+        if uncheckables == []:
+            print("checkmatw")
+
 def makeMove(board, playerinputclicks, color_to_move):
     piece_y = playerinputclicks[0][0]
     piece_x = playerinputclicks[0][1]
@@ -731,6 +755,7 @@ def makeMove(board, playerinputclicks, color_to_move):
                         board[piece_y][piece_x] = None
             else:
                 pass
+    checkCheckmate(board, color_to_move)
     return board
 
 #all this code until quit i got from here https://levelup.gitconnected.com/chess-python-ca4532c7f5a4 and https://www.youtube.com/watch?v=o24J3WcBGLg
