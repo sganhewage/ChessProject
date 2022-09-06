@@ -386,6 +386,8 @@ def makeMove(board, playerinputclicks):
             lower_y_moves = []
             left_x_moves = []
             right_x_moves = []
+            adj_pos_moves = []
+
             for move in pos_moves:
                 if str(move)[0] == alpha_piece_x and int(str(move)[1]) > int(board_piece_y):
                     upper_y_moves.append(move)
@@ -395,8 +397,46 @@ def makeMove(board, playerinputclicks):
                     right_x_moves.append(move)
                 if str(move)[1] == board_piece_y and chess_map_from_alpha_to_index[str(move)[0]] < piece_x:
                     left_x_moves.append(move)
+            
             lower_y_moves.reverse()
             left_x_moves.reverse()
+
+            for move in upper_y_moves:                        
+                x_val = chess_map_from_alpha_to_index[move[0]]
+                board_y = move[1]
+                y_val = chess_map_from_board_y_to_true_y[int(board_y)]
+                
+                print(move)
+                if board[int(x_val)][int(y_val)] == None:
+                    print("huh")
+                    adj_pos_moves.append(move)
+                else:
+                    print("lol")
+                    adj_pos_moves.append(move)
+                    break
+                
+            print(adj_pos_moves)
+
+
+            for move in right_x_moves:
+                x_val = chess_map_from_alpha_to_index[move[0]]
+                board_y = move[1]
+                y_val = chess_map_from_board_y_to_true_y[int(board_y)]
+                board[int(x_val)][int(y_val)]
+
+            for move in lower_y_moves:
+                x_val = chess_map_from_alpha_to_index[move[0]]
+                board_y = move[1]
+                y_val = chess_map_from_board_y_to_true_y[int(board_y)]
+                board[int(y_val)][int(x_val)]
+
+            for move in upper_y_moves:
+                x_val = chess_map_from_alpha_to_index[move[0]]
+                board_y = move[1]
+                y_val = chess_map_from_board_y_to_true_y[int(board_y)]
+                board[int(y_val)][int(x_val)]
+                
+                    
             
 
         if str(board[piece_y][piece_x])[1] == "Q":
