@@ -35,12 +35,16 @@ bBImg = pygame.image.load('Chess Graphics/chess graphics/chess pieces/bB.png')
 gameDisplay = pygame.display.set_mode((800, 800)) #source it https://pythonprogramming.net/displaying-images-pygame/
 
 board = [["bR", "bKn", "bB", "bQ", "bK", "bB", "bKn", "bR"],
-        ["bP", "bP", "bP", "bP", "bP", "bP", "bP", "bP"],
+        ["bP", "bP", "bP", "bP", None, "bP", "bP", "bP"],
         [None, None, None, None, None, None, None, None],
+<<<<<<< Updated upstream
         [None, None, None, "bQ", None, None, None, None],
+=======
         [None, None, None, None, None, None, None, None],
+        [None, None, None, None, None, "wP", "wP", None],
+>>>>>>> Stashed changes
         [None, None, None, None, None, None, None, None],
-        ["wP", "wP", "wP", "wP", "wP", "wP", "wP", "wP"],
+        ["wP", "wP", "wP", "wP", "wP", None, None, "wP"],
         ["wR", "wKn", "wB", "wQ", "wK", "wB", "wKn", "wR"]]
 
 piece_dict = {"wP": wPImg,
@@ -636,8 +640,114 @@ def makeMove(board, playerinputclicks, color_to_move):
                 pos_moves = getKnightMoves(alpha_piece_x+board_piece_y, board)
             else:
                 pos_moves = getKingMoves(alpha_piece_x+board_piece_y, board)
+<<<<<<< Updated upstream
+=======
+    return pos_moves
+
+def checkCheck(board, color, king_color = None):
+    pos_moves = []
+    print(color)
+    if king_color != None: 
+
+        if color == "w":
+            king_color = "b"
+        if color == "b":
+            king_color = "w"
+        #print(str(king_color))
+    
+    for y in range(len(board)):
+        for x in range(len(board[0])):
+            pos_moves.append(possibleMoves(board, x, y, color))
+            print(board[y][x], possibleMoves(board, x, y, color))
+    for y in range(len(board)):
+        try: 
+            king_cords = [y,board[y].index(king_color+"K")]
+            
+        except: pass
+    
+    alpha_king_cords = str(chess_map_from_index_to_alpha[king_cords[1]]+chess_map_from_true_y_to_board_y[king_cords[0]])
+    
+    check = False
+    for i in pos_moves:
+        if alpha_king_cords in i:
+            check = True 
+    return check
+
+def checkCheckmate(board, color_to_move):
+
+    print(color_to_move)
+    #checkCheck(board, color_to_move)
+    
+    checkmate = False
+    pos_moves = []
+    uncheckables = []
+
+    if check == True:
+        
+        if color_to_move == "w":
+            for y in range(len(board)):
+                for x in range(len(board[0])):
+                    
+                    pos_moves.extend(possibleMoves(board, x, y, "w"))
+                    for i in pos_moves:
+                        test_board = [[board[y][x] for x in range(len(board[0]))] for y in range(len(board))]
+                        dest_x = int(chess_map_from_alpha_to_index[str(i)[0]])
+                        dest_y = int(chess_map_from_board_y_to_true_y[int(str(i)[1])])
+                        if board[y][x] != None:
+                            if str(board[dest_y][dest_x])[0] == str(board[y][x])[0]:
+                                pass
+                            elif str(board[dest_y][dest_x])[0] != str(board[y][x])[0]:
+                                test_board[dest_y][dest_x] = test_board[y][x]
+                                test_board[y][x] = None
+                            else:
+                                test_board[dest_y][dest_x] = test_board[y][x]
+                                test_board[y][x] = None
+                            try:
+                                
+                                if checkCheck(test_board, color_to_move = "w", king_color = "w") == False:
+                                    print(test_board[dest_y][dest_x], i)
+                                    uncheckables.append(i)
+                            except UnboundLocalError: print(test_board)
+        if color_to_move == "b":
+            for y in range(len(board)):
+                for x in range(len(board[0])):
+                    pos_moves.extend(possibleMoves(board, x, y, "w"))
+                    for i in pos_moves:
+                        dest_x = int(chess_map_from_alpha_to_index[str(i)[0]])
+                        dest_y = int(chess_map_from_board_y_to_true_y[int(str(i)[1])])
+                        if board[y][x] != None:
+                            if str(board[dest_y][dest_x])[0] != str(board[y][x])[0]:
+                                test_board[dest_y][dest_x] = test_board[y][x]
+                                test_board[y][x] = None
+                            else:
+                                test_board[dest_y][dest_x] = test_board[y][x]
+                                test_board[y][x] = None
+                            if checkCheck(test_board, "w") == False:
+                                uncheckables.append(i)
+
+        print(uncheckables)
+        if len(uncheckables) == 0:
+            checkmate = True
+    return checkmate
+
+def makeMove(board, playerinputclicks, color_to_move):
+    piece_y = playerinputclicks[0][0]
+    piece_x = playerinputclicks[0][1]
+
+    if color_to_move == "w":
+        check_color = "b"
+    if color_to_move == "b":
+        check_color = "w"
+
+    if board[piece_y][piece_x] != None:
+        if str(board[piece_y][piece_x])[0] != color_to_move:
+            return board
+        dest_y = playerinputclicks[1][0]
+        dest_x = playerinputclicks[1][1]
+>>>>>>> Stashed changes
 
         for i in pos_moves:
+            check_board = [[board[y][x] for x in range(len(board[0]))] for y in range(len(board))]
             if(i == alpha_dest_x+board_dest_y):
                 if board[piece_y][piece_x] != None:
                     if str(board[dest_y][dest_x])[0] == str(board[piece_y][piece_x])[0]:
@@ -650,6 +760,11 @@ def makeMove(board, playerinputclicks, color_to_move):
                         board[piece_y][piece_x] = None
             else:
                 pass
+<<<<<<< Updated upstream
+=======
+    
+    checkMate = checkCheckmate(board, color_to_move)
+>>>>>>> Stashed changes
     return board
 
 #all this code until quit i got from here https://levelup.gitconnected.com/chess-python-ca4532c7f5a4 and https://www.youtube.com/watch?v=o24J3WcBGLg
